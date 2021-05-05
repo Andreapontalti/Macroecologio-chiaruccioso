@@ -1,0 +1,26 @@
+install.packages("vegano")
+library(vegan)
+dat <- read.csv("data/data_biomac_1.csv")   
+head(dat[1:5])   #ricordati che vanno le quadrate dentro, se no non funzia. Also, questa cosa ti carica materiale vario dal file data_biomac. 
+                     #con la "X:Y", si decidono le colonne da prendere "da questa a questa" (quindi nel primo caso mi inserisce le righe dalla prima alla quinta.
+                     #con la virgola si separa la selezione RIGHE dalla selezione COLONNE
+head(dat[1:2,2:1]) 
+
+tail(dat[, 1:5])    #come puoi già immaginare, questo sorteggio parte dalle ultime righe mentre "head" inizia dalla testa appunto, quindi dall'inizio
+
+comm <- dat[,-1]    #con questo abbiamo creato una tabella che toglie quell'ultima casella con scritto "plot" che non ci serve nei dati
+
+head(comm[1:3, 1:7])    #preso dalla 1esima alla 3esima riga e dalla 1esima alla 7esima colonna
+
+comm[1:5, 1:5] > 0     #con questa si vedono tutte le piante che sono presenti (quindi maggiore di zero)
+rowSums(comm[1:5, 1:5] > 0)    #permette di fare cose per calcolare la species richness
+rowSums(comm > 0)
+rowSums(comm[, 1:20] > 0)  calculate species richness for all the plots aconsidering only the first 20 species (le specie sono messe in colonna quindi vanno nel secondo stacco
+rowSums(comm[1:10,] > 0)  calculate species richness for only the first 10 rows (considering all species) #le righe sono nel primo stacco
+
+
+
+specnumber(comm)
+comm[which(comm[, 1] > 0), ]   #questo non ho ancora capito a cosa serve QUINDI ANDRE RICONTROLLA
+hist(specnumber(comm))  #questo mi crea un'istogramma molto fico con le 9 specie analizzate nelle varie patch (ci fa vedere la species richness di queste 9 specie all'interno delle varie patch)
+hist(specnumber(comm), xlab="species richness", main=NULL )   #qesto fa mettere come nome delle ascisse X il nome "species richness"
