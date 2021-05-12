@@ -1,0 +1,51 @@
+install.packages("vegan")
+library(vegan)
+dat <- read.csv("data/data_biomac_3.csv", stringsAsFactors = F)
+head(dat[1:6,1:10])
+dat$island == "Elba"  #
+
+elba <- dat[dat$island == "Elba", ]
+
+dim(elba)
+
+dat[, -(1:7)]   #con questo tiri via le prime 7 colonne quindo woooo fantastico ora hai solo i dati utili che ti interessano
+dat[, 8:873]
+dat[, 8:ncol(873)]   #anche sti qua danno lo stesso risultato
+
+
+which.max(sort(specnumber(sonno, MARGIN = 2),decreasing = F))
+
+head(sort(specnumber(sonno, MARGIN = 2), decreasing = T), 15)  #per vedere le top 15 piante più presenti sull'Elba
+sort(specnumber(sonno, MARGIN = 2), decreasing = T)[1:15]
+
+sort(specnumber(sonno, MARGIN = 2), decreasing = T)[1:15]
+sum(which((specnumber(sonno, MARGIN = 2)==1)))
+sum(specnumber(sonno, MARGIN = 2)==1)           #robe fatte da Zanini
+
+rip <- file2[,-(1:5)]
+com_par<-decostand(rip, method="pa")
+
+adipart(com_par)   #con questo si fa la partizione della diversità delle isole che stiamo studiando e comparando fra loro
+
+
+adipart(com_par, file2[,1:4])
+multipart(com_par, scales = 0)
+multipart(com_par, file2[,c(1,5,4)], scales=0)
+
+
+read.csv("data/data_biomac_3.csv", stringsAsFactors=F)
+str(dat[,1:10])
+
+
+dim(dat)   #ti dice quante colonne (col) e righe (row) ci sono nel file caricato
+nrow(dat)
+ncol(dat)
+
+par(mar=c(1,1,1,1))
+sr <- file2[,-(1:5)]
+sort(specnumber(comm[,1:15]), MARGIN=2)
+sf <- specnumber(comm,MARGIN=2)
+comm <- dat[, -(1:5)]
+hist(sf, xlab = "Species richness", main = NULL, ylab = "Number of plots", breaks = 50)  #AAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHH!!!!!!!
+
+
