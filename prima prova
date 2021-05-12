@@ -1,4 +1,4 @@
-install.packages("vegano")
+install.packages("vegan")
 library(vegan)
 dat <- read.csv("data/data_biomac_1.csv")   
 head(dat[1:5])   #ricordati che vanno le quadrate dentro, se no non funzia. Also, questa cosa ti carica materiale vario dal file data_biomac. 
@@ -24,3 +24,41 @@ specnumber(comm)
 comm[which(comm[, 1] > 0), ]   #questo non ho ancora capito a cosa serve QUINDI ANDRE RICONTROLLA
 hist(specnumber(comm))  #questo mi crea un'istogramma molto fico con le 9 specie analizzate nelle varie patch (ci fa vedere la species richness di queste 9 specie all'interno delle varie patch)
 hist(specnumber(comm), xlab="species richness", main=NULL )   #qesto fa mettere come nome delle ascisse X il nome "species richness"
+
+frequency= the number of species can be found from a plot X to a plot Y
+
+colSums(dat)
+
+specnumber(comm, MARGIN=2) #
+hist(specnumber(comm, MARGIN=2))  #crea un'istogramma che mostra il numero di specie che co-occorrono nello stesso plot
+#dall'istogramma che esce, possiamo notare come plot con alta species richness (dalle 10 specie in su) sono molto rari
+
+
+hist(specnumber(comm, MARGIN=2), breaks=20) #il numer di barre visualizzate sarà 20, quindi i dati verranno visualizzati con magiore precisione
+hist(specnumber(comm, MARGIN = 2), breaks = 1:25) #con questo decidi quanti valori mostrare sull'asse X (anche oltre il valore massimo presente nelle tabelle)
+
+sort(specnumber(comm, MARGIN = 2),decreasing = FALSE) #serve per ordinare in ordine decrescente o crescente i dati SPECNUMBER che stiamo analizzando da prima
+head(sort(specnumber(comm, MARGIN = 2), decreasing = T))  #con questa (che è quella giusta) ti ordina sempre gli SPECNUMBER però ti mostra solo i primi 6 (gia, i primi, perché si usa la funzione "head")
+
+
+T==TRUE #è come scrivere T
+F==FALSE #è come scrivere F    
+
+specnumber(comm, MARGIN = 2)==1    #mostra quali specie compaiono solo una volta in un qualsiasi plot (usando il TRUE e FALSE). 
+sum(specnumber(comm, MARGIN = 2)==1)  #somma la funzione prima e mostra quali specie compaiono solo una volta
+ 
+which((specnumber(comm, MARGIN = 2)==1) #mostra quali sono le specie che compaiono solo una volta nei plot per iscritto 
+
+comm_pa <- decostand(comm, method = "pa")  #The function provides some popular (and effective) standardization methods for community ecologists.
+
+
+rep(1,10)  
+rep(2,9)  ####ti ripete i numeri 1/2 per 10/9 volte
+
+c(rep(1, 10), rep(2, 9))
+groups <- c(rep(1, 10), rep(2, 9))   #crea due gruppi: uno con 10 volte 1 e un altro con 9 volte 2
+
+specnumber(comm, groups=groups)   #mostra quante specie compaiono nel grupo 1 e quante nel gruppo 2
+
+
+
