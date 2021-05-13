@@ -46,6 +46,27 @@ sr <- file2[,-(1:5)]
 sort(specnumber(comm[,1:15]), MARGIN=2)
 sf <- specnumber(comm,MARGIN=2)
 comm <- dat[, -(1:5)]
-hist(sf, xlab = "Species richness", main = NULL, ylab = "Number of plots", breaks = 50)  #AAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHH!!!!!!!
+hist(sr, xlab = "Species richness", main = NULL, ylab = "Number of plots", breaks = 50)  #AAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHH!!!!!!!
+
+####################################################################################################################################################à
+
+library(vegan)
+library(betapart)
+
+data(BCI)
+
+BCI_pa <- decostand(BCI, method= "pa")
+vegdist(BCI_pa[1:2,], method="jaccard")   #serve per misurare le similitudini utilizzando la distanza fra i plot
+d1 <- vegdist(BCI_pa, method = "jaccard")
+hist(d1)
+
+beta.multi(BCI_pa, index.family = "jaccard")
+beta.pair(BCI_pa, index.family = "jaccard")
+d2<-beta.pair(BCI_pa, index.family = "jaccard")
+boxplot(d2)   #questo fa delle robe fiche che sicuro ti serviranno. Impara sto programma Andre, fallo per il cuore delle carte
+boxplot(d2, names=c("Turnover", "Nestedness", "Total beta diversity"))
+
+
+
 
 
