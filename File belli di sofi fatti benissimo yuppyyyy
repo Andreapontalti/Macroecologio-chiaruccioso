@@ -1,0 +1,170 @@
+library(vegan)
+library(betapart)
+
+#dataset already inside the packages
+data(BCI)
+str(BCI)
+?BCI
+
+#explorative analysis
+#SPECIES RICHNESS
+sr <- specnumber(BCI)
+hist(sr, xlab= "Species richness", ylab="number of plots", main = NULL)
+
+#summary statistics
+summary(sr)
+
+#standardize the matrix as a presence/absence
+BCI_pa <- decostand(BCI, method="pa")
+str(BCI_pa)
+
+#calculate a n. of distance matrix employed by ecologists
+
+vegdist(BCI_pa[1:3,], method="jaccard") #SIMILARITY
+1 - vegdist(BCI_pa[1:2,], method="jaccard") #DISSIMILARITY
+
+d1 <- vegdist(BCI_pa, method="jaccard") #all the matrix
+hist(d1, xlab="Jaccard similarity", main=NULL)
+summary(d1)
+
+#calculate Jaccard distance, nestedness and turnover
+beta.multi(BCI_pa, index.family = "jaccard")
+
+#same but for each distance
+d2 <- beta.pair(BCI_pa, index.family = "jaccard")
+boxplot(d2)
+
+#DISTANCE DECAY
+
+data("BCI.env")#already present in the vegan package
+?BCI.env
+dim(BCI.env)
+
+#extract just the turnover from d2
+
+bci_tur <- d2$beta.jtu
+
+#calculate the spatial distance
+
+bci_geo <- dist(BCI.env[,1:2])
+
+#plot the graph 
+
+plot(bci_geo, bci_tur)
+
+#test if there is a relationship between bci_geo and bci_tur
+#linear model
+
+mod1 <- lm(bci_tur ~ bci_geo)
+summary(mod1)
+
+mod1$coefficients
+abline(a = mod1$coefficients[1], b = mod1$coefficients[2], col = "red", lwd = 3) #to add 
+#the line to the scatterplot
+
+#####################################################
+#SAME BUT FOR NESTEDNESS
+
+bci_nes <-d2$beta.jne
+bci_geo <- dist(BCI.env[,1:2])
+
+plot(bci_geo, bci_nes)
+
+mod2 <- lm(bci_nes ~ bci_geo)
+summary(mod2)
+
+abline(a = mod2$coefficients[1], b = mod2$coefficients[2], col = "red", lwd = 3)
+
+mod2$coefficients
+
+dev.off()
+##################################################################################
+data(mite)
+?mite
+
+str(mite)
+sr <- specnumber(mite)
+hist (sr)
+
+mite_pa <- decostand(mite, method="pa")
+
+d1 <- vegdist(mite_pa, method="jaccard") 
+hist(d1, xlab="Jaccard similarity", main=NULL)
+summary(d1)
+
+d2 <- beta.pair(mite_pa, index.family = "jaccard")
+boxplot(d2)
+
+data("mite.xy")#already present in the vegan package
+?mite.xy
+
+#DISTANCE DECAY FOR TURNOVER
+
+mite_tur <- d2$beta.jtu
+mite_geo <- dist(mite.xy)
+
+plot(mite_geo, mite_tur)
+
+mod1 <- lm(mite_tur ~ mite_geo)
+summary(mod1)
+
+mod1$coefficients
+abline(a = mod1$coefficients[1], b = mod1$coefficients[2], col = "green", lwd = 3)
+
+#DISTANCE DECAY FOR NESTEDNESS
+
+mite_nes <- d2$beta.jne
+mite_geo <- dist(mite.xy)
+
+plot(mite_geo, mite_nes)
+
+mod2 <- lm(mite_nes ~ mite_geo)
+summary(mod2)
+
+mod2$coefficients
+abline(a = mod2$coefficients[1], b = mod2$coefficients[2], col = "green", lwd = 3)
+
+####################################################################
+LEZIONE DI VENERDI
+
+Indication matrix= show the level of co-occouernce of species in plots
+
+install.packages("DarkDiv")  #permette di studiare la Dark Diversity
+library(DarkDiv)  
+dat <-read.csv("data/data_biomac_2.csv")
+
+
+comm <- dat[,-(1:5)]
+comm <- dat[,6:ncol(dat)]    #con questo fai la tessa cosa
+dark_comm <- DarkDiv(comm)
+
+
+rowSums(dark_comm$Dark)     #se si usa questo ci vengono dati tutti NA, perché non si possono sommare i numeri con NA
+rowSums(dark_comm$Dark, na.rm=T)  #in questo modo i NA vengono rimossi, in mdo da non dare risultati "contraffatti"
+
+dd <- rowSums(dark_comm$Dark, na.rm=T)
+summary(dd)
+hist(dd)  
+
+boxplot(dd~dat$Management)   #this assignment is for "comparing the dark diversity" values between the two types of forest management practices
+boxplot(dd[dat$Management == "C"], dd[dat$Management == "F"])   #sì ecco, è lo stesso ma abbiamo cambiato il nome dei valori nelle ascisse
+#dal dato si nota che il ceduo è un livello di dark diversity molto omogeneo, mentre la fustaia può possedere livelli di dark diversity molto differenti
+#con dati normalizzati si può sare tranquillamente la statisitica parametrica, se non sono dati normalizzati bisogna usare quella non parametrica
+
+t.test(dd ~ dat$Management)  #questo ti fa il T-test (compare il p value siiiiiiiiiiiiiiiuuuuuuuuuuuuuuuuuuuuuuum)
+
+wilcox.test(dd ~ dat$Management) #questo è il test di Wilcoxon. Converte i livelli in due rank e poi li paragona
+
+
+ 
+library(vegan)    #specnumber non funzia senza i vegani (lmao)
+sr <-specnumber(comm)
+cc <- log(sr/dd)   #cc vuol dire community completeness
+cc
+summary(cc)
+hist(cc)
+
+boxplot(cc~ dat$Management)   #compara cla community completness fra ceduo e fustaia. Sembra che ancora una volta la fustaia sia migliore
+#in quanto i "whiskers" e la linea nera mediana, bisogna usare la statistica NON parametrica
+wilcox.test(cc~ dat$Management) 
+
